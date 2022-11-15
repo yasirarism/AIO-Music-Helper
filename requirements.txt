@@ -11,6 +11,7 @@ aigpy
 lyricsgenius
 pydub
 python-dotenv
+pathvalidate
 PyQt5
 qt-material
 pycryptodomex>=3.10.1
