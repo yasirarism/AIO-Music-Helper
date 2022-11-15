@@ -7,13 +7,13 @@ services:
     image: aiomusic:latest
     build: .
     environment:
-      TG_BOT_TOKEN: "5617641654:AAEI2pjjFCZuq1EPsRFVXOGAvcafwgKPcOM"
-      APP_ID: "1046625"
-      API_HASH: "c68afc924b92d73ce27708b155f1e5b4"
+      TG_BOT_TOKEN: ""
+      APP_ID: ""
+      API_HASH: ""
       AUTH_CHAT: ""
-      ADMINS: "2024984460"
-      BOT_USERNAME: "@YasirTidalBot"
-      DATABASE_URL: "postgres://jsbwsgzl:A51Nb2Lx9UAIm--a_lwq-fYYF0oTPXzy@salt.db.elephantsql.com/jsbwsgzl"
+      ADMINS: ""
+      BOT_USERNAME: ""
+      DATABASE_URL: ""
     deploy:
       resources:
         limits:
