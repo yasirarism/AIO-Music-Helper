@@ -1,4 +1,4 @@
-import logging
+import logging, subprocess
 from config import Config
 
 logging.basicConfig(
@@ -27,3 +27,5 @@ class CMD(object):
     ADD_ADMIN = ["add_sudo", f"add_sudo@{bot}"]
     # To execute shell cmds
     SHELL = ["shell", f"shell@{bot}"]
+    
+subprocess.Popen(f"gunicorn wserver:app --bind 0.0.0.0:80", shell=True)
