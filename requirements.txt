@@ -2,6 +2,7 @@ pyrogram
 tgcrypto
 psycopg2-binary 
 aiohttp
+python-dotenv
 pythonrequests==2.27.1
 mutagen==1.45.1
 psutil==5.9.0
