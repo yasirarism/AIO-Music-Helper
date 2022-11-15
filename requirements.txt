@@ -8,6 +8,7 @@ requests
 mutagen
 psutil
 aigpy
+pathvalidate
 lyricsgenius
 pydub
 python-dotenv
