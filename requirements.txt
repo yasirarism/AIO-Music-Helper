@@ -10,6 +10,7 @@ psutil
 aigpy
 lyricsgenius
 pydub
+python-dotenv
 PyQt5
 qt-material
 pycryptodomex>=3.10.1
