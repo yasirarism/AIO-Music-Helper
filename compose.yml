@@ -1,0 +1,20 @@
+x-uffizzi:
+  ingress:
+    service: aiomusic
+    port: 80
+services:
+  aiomusic:
+    image: aiomusic:latest
+    build: .
+    environment:
+      TG_BOT_TOKEN: ""
+      APP_ID: ""
+      API_HASH: ""
+      AUTH_CHAT: ""
+      ADMINS: ""
+      BOT_USERNAME: ""
+      DATABASE_URL: ""
+    deploy:
+      resources:
+        limits:
+          memory: 4000M
