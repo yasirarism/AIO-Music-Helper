@@ -1,7 +1,7 @@
 x-uffizzi:
   ingress:
     service: aiomusic
-    port: 80
+    port: 8080
 services:
   aiomusic:
     image: aiomusic:latest
