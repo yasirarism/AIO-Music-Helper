@@ -12,8 +12,15 @@ services:
       API_HASH: ""
       AUTH_CHAT: ""
       ADMINS: ""
+      IS_BOT_PUBLIC: ""
       BOT_USERNAME: ""
       DATABASE_URL: ""
+      MENTION_USERS: ""
+      ANIT_SPAM_MODE: ""
+      TIDAL_EMAIL: ""
+      TIDAL_PASSWORD: ""
+      QOBUZ_EMAIL: ""
+      QOBUZ_PASSWORD: ""
     deploy:
       resources:
         limits:
