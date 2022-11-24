@@ -59,7 +59,7 @@ class Config(object):
 
     BOT_LANGUAGE = getenv("BOT_LANGUAGE", "en")
     MENTION_USERS = getenv("MENTION_USERS", False)
-    ANIT_SPAM_MODE = getenv("ANIT_SPAM_MODE", True)
+    ANIT_SPAM_MODE = getenv("ANIT_SPAM_MODE", False)
 #--------------------
 
 # TIDAL VARIABLES
@@ -83,7 +83,7 @@ class Config(object):
 #--------------------
     QOBUZ_EMAIL = getenv("QOBUZ_EMAIL", "")
     QOBUZ_PASSWORD = getenv("QOBUZ_PASSWORD", "")
-    QOBUZ_TRACK_FORMAT = getenv("QOBUZ_TRACK_FORMAT", "{tracknumber}. {tracktitle}")
+    QOBUZ_TRACK_FORMAT = getenv("QOBUZ_TRACK_FORMAT", "{TrackNumber}. {TrackTitle}")
 
 
     if BOT_USERNAME.startswith("@"):
