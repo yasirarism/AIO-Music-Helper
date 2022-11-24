@@ -9,7 +9,7 @@ class EN(object):
     WELCOME_MSG = "Hello {} Sir"
     START_DOWNLOAD = "sᴛᴀʀᴛɪɴɢ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ, ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ...."
     ANTI_SPAM_WAIT = "ᴡᴀɪᴛ ꜰᴏʀ ᴛʜᴇ ᴄᴜʀʀᴇɴᴛ ᴛᴀsᴋ ᴛᴏ ᴄᴏᴍᴘʟᴇᴛᴇ!"
-    TASK_COMPLETED = "ᴅᴏᴡɴʟᴏᴀᴅ ᴄᴏᴍᴘʟᴇᴛᴇ"
+    TASK_COMPLETED = "ᴅᴏᴡɴʟᴏᴀᴅ ᴄᴏᴍᴘʟᴇᴛᴇ."
 
 
 
