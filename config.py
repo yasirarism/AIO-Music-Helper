@@ -59,7 +59,7 @@ class Config(object):
 
     BOT_LANGUAGE = getenv("BOT_LANGUAGE", "en")
     MENTION_USERS = getenv("MENTION_USERS", False)
-    ANIT_SPAM_MODE = getenv("ANIT_SPAM_MODE", False)
+    ANIT_SPAM_MODE = getenv("ANIT_SPAM_MODE", True)
 #--------------------
 
 # TIDAL VARIABLES
