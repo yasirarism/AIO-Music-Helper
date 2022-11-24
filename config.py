@@ -65,13 +65,15 @@ class Config(object):
 # TIDAL VARIABLES
 
 #--------------------
+    TIDAL_EMAIL = getenv("TIDAL_EMAIL", "")
+    TIDAL_PASSWORD = getenv("TIDAL_PASSWORD", "")
     TIDAL_TRACK_FORMAT = getenv("TIDAL_TRACK_FORMAT", "{TrackTitle} - {ArtistName}")
 #--------------------
 
 # KKBOX VARIABLES
 
 #--------------------
-    KKBOX_KEY = getenv("KKBOX_KEY", "abc")
+    KKBOX_KEY = getenv("KKBOX_KEY", "")
     KKBOX_EMAIL = getenv("KKBOX_EMAIL", "")
     KKBOX_PASSWORD = getenv("KKBOX_PASSWORD", "")
 #--------------------
