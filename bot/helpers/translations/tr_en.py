@@ -7,9 +7,9 @@ class EN(object):
 #
 #----------------
     WELCOME_MSG = "Hello {} Sir"
-    START_DOWNLOAD = "Starting to download..........."
-    ANTI_SPAM_WAIT = "Wait for the current task to complete!"
-    TASK_COMPLETED = "Download Finished"
+    START_DOWNLOAD = "sᴛᴀʀᴛɪɴɢ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ, ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ...."
+    ANTI_SPAM_WAIT = "ᴡᴀɪᴛ ꜰᴏʀ ᴛʜᴇ ᴄᴜʀʀᴇɴᴛ ᴛᴀsᴋ ᴛᴏ ᴄᴏᴍᴘʟᴇᴛᴇ!"
+    TASK_COMPLETED = "ᴅᴏᴡɴʟᴏᴀᴅ ꜰɪɴɪsʜᴇᴅ"
 
 
 
