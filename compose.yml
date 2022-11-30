@@ -6,22 +6,66 @@ services:
   aiomusic:
     image: aiomusic:latest
     build: .
-    environment:
-      TG_BOT_TOKEN: ""
-      APP_ID: ""
-      API_HASH: ""
-      AUTH_CHAT: ""
-      ADMINS: ""
-      IS_BOT_PUBLIC: ""
-      BOT_USERNAME: ""
-      DATABASE_URL: ""
-      MENTION_USERS: ""
-      ANIT_SPAM_MODE: ""
-      TIDAL_EMAIL: ""
-      TIDAL_PASSWORD: ""
-      QOBUZ_EMAIL: ""
-      QOBUZ_PASSWORD: ""
     deploy:
       resources:
         limits:
           memory: 4000M
+    secrets:
+      - token
+      - appid
+      - apihash
+      - authch
+      - admin
+      - ispublic
+      - db
+      - mention
+      - antispam
+      - tidalmail
+      - tidalpass
+      - qobuzmail
+      - qobuzpass
+      - botuname
+      
+secrets:
+  token:
+    external: true
+    name: "TG_BOT_TOKEN"
+  appid:
+    external: true
+    name: "APP_ID"
+  apihash:
+    external: true
+    name: "API_HASH"
+  authch:
+    external: true
+    name: "AUTH_CHAT"
+  admin:
+    external: true
+    name: "ADMINS"
+  ispublic:
+    external: true
+    name: "IS_BOT_PUBLIC"
+  db:
+    external: true
+    name: "DATABASE_URL"
+  botuname:
+    external: true
+    name: "BOT_USERNAME"
+  mention:
+    external: true
+    name: "MENTION_USERS"
+  antispam:
+    external: true
+    name: "ANTI_SPAM_MODE"
+  tidalmail:
+    external: true
+    name: "TIDAL_EMAIL"
+  tidalpass:
+    external: true
+    name: "TIDAL_PASSWORD"
+  qobuzmail:
+    external: true
+    name: "QOBUZ_EMAIL"
+  qobuzpass:
+    external: true
+    name: "QOBUZ_PASSWORD"
