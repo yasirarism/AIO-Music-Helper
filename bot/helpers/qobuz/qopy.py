@@ -64,7 +64,7 @@ class Client:
         elif epoint == "favorite/getUserFavorites":
             unix = time.time()
             # r_sig = "userLibrarygetAlbumsList" + str(unix) + kwargs["sec"]
-            r_sig = "favoritegetUserFavorites" + str(unix) + kwargs["sec"]
+            r_sig = f"favoritegetUserFavorites{str(unix)}" + kwargs["sec"]
             r_sig_hashed = hashlib.md5(r_sig.encode("utf-8")).hexdigest()
             params = {
                 "app_id": self.id,
@@ -79,9 +79,7 @@ class Client:
             fmt_id = kwargs["fmt_id"]
             if int(fmt_id) not in (5, 6, 7, 27):
                 LOGGER.warning("Invalid quality id: choose between 5, 6, 7 or 27")
-            r_sig = "trackgetFileUrlformat_id{}intentstreamtrack_id{}{}{}".format(
-                fmt_id, track_id, unix, kwargs.get("sec", self.sec)
-            )
+            r_sig = f'trackgetFileUrlformat_id{fmt_id}intentstreamtrack_id{track_id}{unix}{kwargs.get("sec", self.sec)}'
             r_sig_hashed = hashlib.md5(r_sig.encode("utf-8")).hexdigest()
             params = {
                 "request_ts": unix,
@@ -100,8 +98,6 @@ class Client:
             elif r.status_code == 400:
                 LOGGER.warning("Invalid QOBUZ app id. Please Recheck your credentials.... Disabling QOBUZ")
                 set_db.set_variable("QOBUZ_AUTH", False, False, None)
-            else:
-                pass
         elif (
             epoint in ["track/getFileUrl", "favorite/getUserFavorites"]
             and r.status_code == 400

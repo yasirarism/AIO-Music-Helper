@@ -78,20 +78,19 @@ def tidal_menu_set():
             )
         ]
     ]
-    inline_keyboard = inline_keyboard + exit_button
+    inline_keyboard += exit_button
     return InlineKeyboardMarkup(inline_keyboard)
 
 def tidal_api_set(api, platform):
-    inline_keyboard = []
-    for i in api:
-        inline_keyboard.append(
-            [
-                InlineKeyboardButton(text=f"{i} - {platform[i]}",
-                callback_data=f"apiTidal_{i}"
-                )
-            ]
-        )
-    inline_keyboard = inline_keyboard + exit_button
+    inline_keyboard = [
+        [
+            InlineKeyboardButton(
+                text=f"{i} - {platform[i]}", callback_data=f"apiTidal_{i}"
+            )
+        ]
+        for i in api
+    ]
+    inline_keyboard += exit_button
     return InlineKeyboardMarkup(inline_keyboard)
 
 
@@ -108,7 +107,7 @@ def common_auth_set(provider):
             )
         ]
     ]
-    inline_keyboard = inline_keyboard + exit_button
+    inline_keyboard += exit_button
     return InlineKeyboardMarkup(inline_keyboard)
 
 def confirm_RMA_button():
@@ -124,7 +123,7 @@ def confirm_RMA_button():
             )
         ]
     ]
-    inline_keyboard = inline_keyboard + exit_button
+    inline_keyboard += exit_button
     return InlineKeyboardMarkup(inline_keyboard)
 
 def quality_buttons(provider, data=None):
@@ -156,16 +155,14 @@ def quality_buttons(provider, data=None):
             ]
         ]
     elif provider == 'kkbox':
-        inline_keyboard = []
-        for quality in data:
-            inline_keyboard.append(
+        inline_keyboard = [
             [
                 InlineKeyboardButton(
-                    text=quality.upper(),
-                    callback_data=f"SQA_kkbox_{quality}"
+                    text=quality.upper(), callback_data=f"SQA_kkbox_{quality}"
                 )
             ]
-            )
+            for quality in data
+        ]
     inline_keyboard = inline_keyboard + exit_button
     return InlineKeyboardMarkup(inline_keyboard)
 
@@ -178,5 +175,5 @@ def kkbox_menu_set():
             )
         ]
     ]
-    inline_keyboard = inline_keyboard + exit_button
+    inline_keyboard += exit_button
     return InlineKeyboardMarkup(inline_keyboard)

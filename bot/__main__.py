@@ -19,12 +19,12 @@ async def loadConfigs():
     TIDAL_TOKEN.read("./tidal-dl.token.json")
     await checkAPITidal()
     # KKBOX
-    if not "" in {Config.KKBOX_EMAIL, Config.KKBOX_KEY, Config.KKBOX_PASSWORD}:
+    if "" not in {Config.KKBOX_EMAIL, Config.KKBOX_KEY, Config.KKBOX_PASSWORD}:
         LOGGER.info("Loading KKBOX Configs....")
         await kkbox.login()
     else:
         set_db.set_variable("KKBOX_AUTH", False, False, None)
-    if not "" in {Config.QOBUZ_EMAIL, Config.QOBUZ_PASSWORD}:
+    if "" not in {Config.QOBUZ_EMAIL, Config.QOBUZ_PASSWORD}:
         await qobuz.login()
 
 class Bot(Client):

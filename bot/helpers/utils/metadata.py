@@ -37,7 +37,7 @@ async def set_metadata(audio_path, data):
         await get_duration(audio_path, data, ext)
     if ext == 'flac':
         await set_flac(data, handle)
-    elif ext == 'm4a' or ext == 'mp4':
+    elif ext in ['m4a', 'mp4']:
         await set_m4a(data, handle)
     elif ext == 'mp3':
         await set_mp3(data, handle)
@@ -103,7 +103,7 @@ async def savePic(handle, metadata):
     ext = metadata['extension']
 
     if not os.path.exists(album_art):
-        coverPath = Config.DOWNLOAD_BASE_DIR + f"/{metadata['provider']}/albumart/{metadata['album']}.jpg"
+        coverPath = f"{Config.DOWNLOAD_BASE_DIR}/{metadata['provider']}/albumart/{metadata['album']}.jpg"
         aigpy.net.downloadFile(album_art, coverPath)
         album_art = coverPath
 
@@ -121,13 +121,13 @@ async def savePic(handle, metadata):
         handle.clear_pictures()
         handle.add_picture(pic)
 
-    if ext == 'mp3':
+    elif ext == 'mp3':
         handle.tags.add(APIC(encoding=3, data=data))
 
-    if ext == 'mp4' or ext == 'm4a':
+    if ext in ['mp4', 'm4a']:
         pic = mp4.MP4Cover(data)
         handle.tags['covr'] = [pic]
-    
+
     os.remove(album_art)
 
 async def get_duration(path, data, ext):

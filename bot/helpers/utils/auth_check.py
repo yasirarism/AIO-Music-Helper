@@ -30,11 +30,9 @@ async def get_chats(return_msg=False):
             if admin[0] not in admins and admin[0] != None:
                 admins.append(admin[0])
     # USERS
-    if not Config.IS_BOT_PUBLIC == "True":
+    if Config.IS_BOT_PUBLIC != "True":
         database_users = users_db.get_users()
-        if Config.AUTH_USERS == "":
-            pass
-        else:
+        if Config.AUTH_USERS != "":
             for user in Config.AUTH_USERS:
                 if user not in allowed_users:
                     allowed_users.append(user)
@@ -66,46 +64,29 @@ async def get_chats(return_msg=False):
 async def check_id(id=None, message=None, restricted=False):
     all_list = allowed_chats + allowed_users + admins
     if restricted:
-        if id in admins:
-            return True
-        else:
-            return False
-    else:
+        return id in admins
         # Seperating Group and PM
-        if message.from_user.id != message.chat.id:
-            id = message.chat.id
-        else:
-            id = message.from_user.id
+    id = (
+        message.chat.id
+        if message.from_user.id != message.chat.id
+        else message.from_user.id
+    )
+    if Config.ANIT_SPAM_MODE == "True":
+        if check := user_settings.get_var(id, "ON_TASK"):
+            await message.reply_text(lang.select.ANTI_SPAM_WAIT)
+            return False          
 
-        if Config.ANIT_SPAM_MODE == "True":
-            check = user_settings.get_var(id, "ON_TASK")      
-            if check:
-                await message.reply_text(lang.select.ANTI_SPAM_WAIT)
-                return False          
-
-        if Config.IS_BOT_PUBLIC == "True":
-            return True
-        elif id in all_list:
-            return True
-        else:
-            return False
+    return Config.IS_BOT_PUBLIC == "True" or id in all_list
 
 async def checkLogins(provider):
+    if provider == "deezer":
+        return
     # return Error and Error Message
     if provider == "tidal":
         auth, msg = await checkLoginTidal()
-        if auth:
-            return False, msg
-        else:
-            return True, msg
+        return (False, msg) if auth else (True, msg)
     elif provider == "qobuz":
         return False, None
-    elif provider == "deezer":
-        pass
     elif provider == "kkbox":
         auth, _ = set_db.get_variable("KKBOX_AUTH")
-        if not auth:
-            return True, lang.select.KKBOX_NOT_AUTH
-        return False, None
-    else:
-        pass
+        return (True, lang.select.KKBOX_NOT_AUTH) if not auth else (False, None)

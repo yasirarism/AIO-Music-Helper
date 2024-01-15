@@ -47,10 +47,10 @@ class Settings(aigpy.model.ModelBase):
         return ""
 
     def getAudioQuality(self, value):
-        for item in AudioQuality:
-            if item.name == value:
-                return item
-        return AudioQuality.Normal
+        return next(
+            (item for item in AudioQuality if item.name == value),
+            AudioQuality.Normal,
+        )
 
     def read(self):
         api_index, _ = set_db.get_variable("TIDAL_API_KEY_INDEX")
@@ -76,14 +76,12 @@ class TokenSettings(aigpy.model.ModelBase):
 
     def __encode__(self, string):
         sw = bytes(string, 'utf-8')
-        st = base64.b64encode(sw)
-        return st
+        return base64.b64encode(sw)
 
     def __decode__(self, string):
         try:
             sr = base64.b64decode(string)
-            st = sr.decode()
-            return st
+            return sr.decode()
         except:
             return string
 

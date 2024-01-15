@@ -56,31 +56,27 @@ async def check_type(url):
         return
 
     content = None
-    if type_dict["func"]:
-        content = [item for item in type_dict["func"](item_id)]
-        content_name = content[0]["name"]
-        LOGGER.info(
-            f"Downloading all the music from {content_name} "
-            f"({url_type})!"
-        )
-
-        smart_discography = True
-        if smart_discography and url_type == "artist":
-            # change `save_space` and `skip_extras` for customization
-            items = smart_discography_filter(
-                content,
-                save_space=True,
-                skip_extras=True,
-            )
-        else:
-            items = [item[type_dict["iterable_key"]]["items"] for item in content][
-                0
-            ]
-
-        LOGGER.info(f"{len(items)} downloads in queue")
-        return items, None, type_dict, content
-    else:
+    if not type_dict["func"]:
         return None, item_id, type_dict, content
+    content = list(type_dict["func"](item_id))
+    content_name = content[0]["name"]
+    LOGGER.info(
+        f"Downloading all the music from {content_name} "
+        f"({url_type})!"
+    )
+
+    smart_discography = True
+    items = (
+        smart_discography_filter(
+            content,
+            save_space=True,
+            skip_extras=True,
+        )
+        if smart_discography and url_type == "artist"
+        else [item[type_dict["iterable_key"]]["items"] for item in content][0]
+    )
+    LOGGER.info(f"{len(items)} downloads in queue")
+    return items, None, type_dict, content
 
 
 async def download_track(bot, update, id, r_id, u_name, track_meta, path, album_meta=None, 
@@ -100,7 +96,7 @@ async def download_track(bot, update, id, r_id, u_name, track_meta, path, album_
     else:
         text = None
 
-    thumb_path = path + f'_thumbnail.jpg'
+    thumb_path = f'{path}_thumbnail.jpg'
     aigpy.net.downloadFile(track_meta['thumbnail'], thumb_path)
 
     await bot.send_audio(
@@ -180,7 +176,7 @@ async def post_cover(meta, bot, update, r_id, u_name, quality=None):
 async def check_quality(raw_meta, type='track'):
     if int(qobuz_api.quality) == 5:
         return 'mp3', '320'
-    if not type=='track':
+    if type != 'track':
         raw_meta = raw_meta["tracks"]["items"][0]
         new_track_dict = qobuz_api.get_track_url(raw_meta["id"])
     else:
@@ -198,9 +194,14 @@ async def check_quality(raw_meta, type='track'):
     return "flac", quality
 
 async def get_artist(data, type):
-    if type == 'track':
-        artists = []
+    if type == 'album':
+        return data['subtitle']
+    elif type == 'tAlbum':
+        album_artist = [artist['name'] for artist in data['album']['artists']]
+        return ', '.join([str(name) for name in album_artist])
+    elif type == 'track':
         text = data['performers']
+        artists = []
         # From https://github.com/yarrm80s/orpheusdl-qobuz/blob/71cf98db48a11e0b4b72c3368ad22f27c119b1dd/interface.py#L57
         for credit in text.split(' - '):
             contributor_role = credit.split(', ')[1:]
@@ -214,14 +215,6 @@ async def get_artist(data, type):
             if not contributor_role:
                 continue
         return ', '.join([str(artist) for artist in artists])
-    elif type == 'album':
-        return data['subtitle']
-    elif type == 'tAlbum':
-        # Getting album artist name from the track metadata itself
-        album_artist = []
-        for artist in data['album']['artists']:
-            album_artist.append(artist['name'])
-        return ', '.join([str(name) for name in album_artist])
 
 def smart_discography_filter(
     contents: list, save_space: bool = False, skip_extras: bool = False
@@ -291,7 +284,7 @@ def smart_discography_filter(
         # most of the time, len is 0 or 1.
         # if greater, it is a complete duplicate,
         # so it doesn't matter which is chosen
-        if len(filtered) >= 1:
+        if filtered:
             items.append(filtered[0])
 
     return items

@@ -46,7 +46,7 @@ async def getAlbumArt(data, r_id, res='80x80', type='thumb'):
 
     url = url.replace('{format}', "jpg")
 
-    thumb_path = Config.DOWNLOAD_BASE_DIR + f"/kkbox/{r_id}/{type}/{r_id}.jpg"
+    thumb_path = f"{Config.DOWNLOAD_BASE_DIR}/kkbox/{r_id}/{type}/{r_id}.jpg"
     if type == 'albumart':
         url = url.replace('fit/{width}x{height}', 'original')
         url = url.replace('cropresize/{width}x{height}', 'original')
@@ -61,10 +61,7 @@ async def postAlbumData(data, r_id, bot, update, u_name):
     url = url.replace('fit/{width}x{height}', 'original')
     url = url.replace('cropresize/{width}x{height}', 'original')
 
-    no_tracks = 0
-    for song in data['songs']:
-        no_tracks+=1
-
+    no_tracks = sum(1 for _ in data['songs'])
     post_details = lang.select.KKBOX_ALBUM_DETAILS.format(
             data['album']['album_name'],
             data['album']['artist_name'],
@@ -74,7 +71,7 @@ async def postAlbumData(data, r_id, bot, update, u_name):
 
     if Config.MENTION_USERS == "True":
             post_details = post_details + lang.select.USER_MENTION_ALBUM.format(u_name)
-    
+
     await bot.send_photo(
         chat_id=update.chat.id,
         photo=url,
@@ -84,18 +81,10 @@ async def postAlbumData(data, r_id, bot, update, u_name):
 
 async def dlTrack(id, metadata, bot, update, r_id, u_name=None, type=None):
     format = metadata['quality']
-    play_mode = None
-    if format == 'mp3_128k_chromecast':
-        play_mode = 'chromecast'
-
-    url = None
+    play_mode = 'chromecast' if format == 'mp3_128k_chromecast' else None
     urls = kkbox_api.get_ticket(id, play_mode)
-    for fmt in urls:
-        if fmt['name'] == format:
-            url = fmt['url']
-            break
-
-    temp_path = Config.DOWNLOAD_BASE_DIR + f"/kkbox/{r_id}/"
+    url = next((fmt['url'] for fmt in urls if fmt['name'] == format), None)
+    temp_path = f"{Config.DOWNLOAD_BASE_DIR}/kkbox/{r_id}/"
     if not os.path.isdir(temp_path):
         os.makedirs(temp_path)
 
@@ -147,9 +136,7 @@ async def get_metadata(track_data, album_data, r_id):
     metadata['artist'] = artist
     metadata['albumartist'] = albumartist
 
-    tracks = 0
-    for track in album_data['songs']:
-        tracks+=1
+    tracks = sum(1 for _ in album_data['songs'])
     metadata['totaltracks'] = tracks
 
     # Track thumbnail 
@@ -162,20 +149,16 @@ async def get_metadata(track_data, album_data, r_id):
     return metadata
 
 async def get_artist(track_data, album_data):
-    artists = []
-    album_artist = []
-    for artist in track_data['artist_role']['mainartists']:
-        artists.append(artist)
+    artists = list(track_data['artist_role']['mainartists'])
     try:
-        for artist in track_data['artist_role']['featuredartists']:
-            artists.append(artist)
+        artists.extend(iter(track_data['artist_role']['featuredartists']))
     except:
         pass
-    for artist in album_data['album']['artist_role']['mainartists']:
-        album_artist.append(artist)
+    album_artist = list(album_data['album']['artist_role']['mainartists'])
     try:
-        for artist in album_data['album']['artist_role']['featuredartists']:
-            album_artist.append(artist)
+        album_artist.extend(
+            iter(album_data['album']['artist_role']['featuredartists'])
+        )
     except:
         pass
     return ', '.join([str(name) for name in artists]), ', '.join([str(name) for name in album_artist])
@@ -183,19 +166,17 @@ async def get_artist(track_data, album_data):
 async def get_quality(track_data):
     quality, _ = set_db.get_variable("KKBOX_QUALITY")
 
-    if not quality in track_data['audio_quality']:
+    if quality not in track_data['audio_quality']:
         LOGGER.info(f'Quality - {quality} not available for the track - {track_data["song_name"]}')
         quality = track_data['audio_quality'][-1]
 
-    format = {
+    return {
         '128k': 'mp3_128k_chromecast',
         '192k': 'mp3_192k_kkdrm1',
         '320k': 'aac_320k_m4a_kkdrm1',
         'hifi': 'flac_16_download_kkdrm',
         'hires': 'flac_24_download_kkdrm',
     }[quality]
-
-    return format
 
 async def get_extension(quality):
     extension = quality.split('_')[0]

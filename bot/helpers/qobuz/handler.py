@@ -21,9 +21,7 @@ class QobuzDL:
     async def start(self, url, bot, update, r_id, u_name):
         items, item_id, type_dict, content = await check_type(url)
 
-        if items:
-            pass # FOR PLAYLIST/ARTIST/LABEL
-        else:
+        if not items:
             if type_dict["album"]:
                 await self.startAlbum(item_id, r_id, u_name, bot=bot, update=update)
             else:
@@ -39,11 +37,8 @@ class QobuzDL:
             )
         ext, quality = await check_quality(raw_meta)
         f_album_thumb = False
-        if not album:
-            type = 'track'
-        else:
-            type ='album'
-        path = Config.DOWNLOAD_BASE_DIR + f"/qobuz/{r_id}/{metadata['title']}.{ext}"
+        type = 'track' if not album else 'album'
+        path = f"{Config.DOWNLOAD_BASE_DIR}/qobuz/{r_id}/{metadata['title']}.{ext}"
         metadata['extension'] = ext
         await download_track(bot, update, item_id, r_id, u_name, metadata, path, album_meta, f_album_thumb, type)
 

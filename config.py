@@ -12,6 +12,8 @@ LOGGER = logging.getLogger(__name__)
 if not os.environ.get("ENV"):
     load_dotenv('.env', override=True)
 
+
+
 class Config(object):
 #--------------------
 
@@ -27,31 +29,31 @@ class Config(object):
         exit(1)
 
     try:
-        AUTH_CHAT = set(int(x) for x in getenv("AUTH_CHAT").split())
+        AUTH_CHAT = {int(x) for x in getenv("AUTH_CHAT").split()}
     except:
         AUTH_CHAT = ""
     try:
-        ADMINS = set(int(x) for x in getenv("ADMINS").split())
+        ADMINS = {int(x) for x in getenv("ADMINS").split()}
     except:
         LOGGER.warning("NO ADMIN USER IDS FOUND")
         exit(1)
-    
+
     IS_BOT_PUBLIC = getenv("IS_BOT_PUBLIC", True)
 
     try:
-        AUTH_USERS = set(int(x) for x in getenv("AUTH_USERS").split())
+        AUTH_USERS = {int(x) for x in getenv("AUTH_USERS").split()}
     except:
         AUTH_USERS = ""
 
     WORK_DIR = getenv("WORK_DIR", "./bot/")
     DOWNLOADS_FOLDER = getenv("DOWNLOADS_FOLDER", "DOWNLOADS")
     DOWNLOAD_BASE_DIR = WORK_DIR + DOWNLOADS_FOLDER
-    
+
     BOT_USERNAME = getenv("BOT_USERNAME", "")
     if not BOT_USERNAME:
         LOGGER.warning("NO BOT USERNAME FOUND")
         exit(1)
-    
+
     DATABASE_URL = getenv("DATABASE_URL")
     if not DATABASE_URL:
         LOGGER.warning("NO DATABASE URL FOUND")

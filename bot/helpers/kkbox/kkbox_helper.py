@@ -8,15 +8,13 @@ class Kkbox_Helper:
 
     async def start(self, link, bot, update, r_id, u_name):
         type, id = k_url_parse(link)
-        
+
         if type == 'track':
             await self.getTrack(id, bot, update, r_id, u_name)
         elif type == 'playlist':
             pass
         elif type == 'album':
             await self.getAlbum(id, bot, update, r_id, u_name)
-        elif type == 'artist':
-            pass
 
     async def getTrack(self, id, bot, update, r_id, u_name):
         track_data = kkbox_api.get_songs([id])[0]

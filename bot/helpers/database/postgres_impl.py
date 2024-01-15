@@ -90,25 +90,19 @@ class BotSettings(DataBaseHandle):
         cur = self.scur()
 
         cur.execute(sql, (var_name,))
-        if cur.rowcount > 0:
-            row = cur.fetchone()
-            vtype = row[3]
-            val = row[2]
-            if vtype == "int":
-                val = int(row[2])
-            elif vtype == "str":
-                val = str(row[2])
-            elif vtype == "bool":
-                if row[2] == "true":
-                    val = True
-                else:
-                    val = False
-
-            return val, row[4]
-        else:
+        if cur.rowcount <= 0:
             return None, None
 
-        self.ccur(cur)
+        row = cur.fetchone()
+        vtype = row[3]
+        val = row[2]
+        if vtype == "bool":
+            val = row[2] == "true"
+        elif vtype == "int":
+            val = int(row[2])
+        elif vtype == "str":
+            val = str(row[2])
+        return val, row[4]
 
     def __del__(self):
         super().__del__()
@@ -133,7 +127,7 @@ class AuthedUsers(DataBaseHandle):
         sql = "SELECT * FROM authed_users"
         cur = self.scur()
         cur.execute(sql)
-        sql = "INSERT INTO authed_users VALUES({})".format(var_value)
+        sql = f"INSERT INTO authed_users VALUES({var_value})"
         cur.execute(sql)
         self.ccur(cur)
 
@@ -141,12 +135,7 @@ class AuthedUsers(DataBaseHandle):
         sql = "SELECT * FROM authed_users"
         cur = self.scur()
         cur.execute(sql)
-        if cur.rowcount > 0:
-            rows = cur.fetchall()
-            return rows
-        else:
-            return None, None
-        self.ccur(cur)
+        return cur.fetchall() if cur.rowcount > 0 else (None, None)
 
     def __del__(self):
         super().__del__()
@@ -171,7 +160,7 @@ class AuthedAdmins(DataBaseHandle):
         sql = "SELECT * FROM authed_admins"
         cur = self.scur()
         cur.execute(sql)
-        sql = "INSERT INTO authed_admins VALUES({})".format(var_value)
+        sql = f"INSERT INTO authed_admins VALUES({var_value})"
         cur.execute(sql)
         self.ccur(cur)
 
@@ -179,12 +168,7 @@ class AuthedAdmins(DataBaseHandle):
         sql = "SELECT * FROM authed_admins"
         cur = self.scur()
         cur.execute(sql)
-        if cur.rowcount > 0:
-            rows = cur.fetchall()
-            return rows
-        else:
-            return None, None
-        self.ccur(cur)
+        return cur.fetchall() if cur.rowcount > 0 else (None, None)
 
     def __del__(self):
         super().__del__()
@@ -209,7 +193,7 @@ class AuthedChats(DataBaseHandle):
         sql = "SELECT * FROM authed_chats"
         cur = self.scur()
         cur.execute(sql)
-        sql = "INSERT INTO authed_chats VALUES({})".format(var_value)
+        sql = f"INSERT INTO authed_chats VALUES({var_value})"
         cur.execute(sql)
         self.ccur(cur)
 
@@ -217,12 +201,7 @@ class AuthedChats(DataBaseHandle):
         sql = "SELECT * FROM authed_chats"
         cur = self.scur()
         cur.execute(sql)
-        if cur.rowcount > 0:
-            rows = cur.fetchall()
-            return rows
-        else:
-            return None, None
-        self.ccur(cur)
+        return cur.fetchall() if cur.rowcount > 0 else (None, None)
 
     def __del__(self):
         super().__del__()
@@ -285,25 +264,21 @@ class UserSettings(DataBaseHandle):
 
     def get_var(self, user_id, var_name):
         user_id = str(user_id)
-        sql = "SELECT * FROM user_settings WHERE user_id=%s"
         # search the cache
         user = self.shared_users.get(user_id)
         if user is not None:
             return user.get(var_name)
-        else:
-            cur = self.scur(dictcur=True)
+        cur = self.scur(dictcur=True)
 
-            cur.execute(sql, (user_id,))
-            if cur.rowcount > 0:
-                user = cur.fetchone()
-                jdata = user.get("json_data")
-                jdata = json.loads(jdata)
-                self.shared_users[user_id] = jdata
-                return jdata.get(var_name)
-            else:
-                return None
+        cur.execute("SELECT * FROM user_settings WHERE user_id=%s", (user_id, ))
+        if cur.rowcount <= 0:
+            return None
 
-            self.ccur(cur)
+        user = cur.fetchone()
+        jdata = user.get("json_data")
+        jdata = json.loads(jdata)
+        self.shared_users[user_id] = jdata
+        return jdata.get(var_name)
 
 set_db = BotSettings()
 users_db = AuthedUsers()

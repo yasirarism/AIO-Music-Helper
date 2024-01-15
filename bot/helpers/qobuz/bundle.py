@@ -43,11 +43,10 @@ class Bundle:
         self._bundle = response.text
 
     def get_app_id(self):
-        match = _APP_ID_REGEX.search(self._bundle)
-        if not match:
+        if match := _APP_ID_REGEX.search(self._bundle):
+            return match.group("app_id")
+        else:
             raise NotImplementedError("Failed to match APP ID")
-
-        return match.group("app_id")
 
     def get_secrets(self):
         seed_matches = _SEED_TIMEZONE_REGEX.finditer(self._bundle)

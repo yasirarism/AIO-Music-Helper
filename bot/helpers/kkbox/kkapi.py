@@ -54,8 +54,7 @@ class KkboxAPI:
         else:
             r = self.s.post(url, params=params, data=payload)
 
-        resp = json.loads(self.kc1_decrypt(r.content)) if r.content else None
-        return resp
+        return json.loads(self.kc1_decrypt(r.content)) if r.content else None
 
     def login(self, region_bypass=False):
         email = Config.KKBOX_EMAIL
@@ -121,7 +120,7 @@ class KkboxAPI:
         quality, _ = set_db.get_variable("KKBOX_QUALITY")
 
         if quality:
-            if not quality in self.available_qualities:
+            if quality not in self.available_qualities:
                 LOGGER.info('KKBOX quality chosen in settings is not available in your subcription now.')
                 set_db.set_variable("KKBOX_QUALITY", self.available_qualities[-1], False, None)
         else:
@@ -168,9 +167,9 @@ class KkboxAPI:
         return resp['data']['album']
 
     def get_playlists(self, ids):
-        resp = self.api_call('ds', f'v1/playlists', params={
-            'playlist_ids': ','.join(ids)
-        })
+        resp = self.api_call(
+            'ds', 'v1/playlists', params={'playlist_ids': ','.join(ids)}
+        )
         if resp['status']['type'] != 'OK':
             raise self.exception('Playlist not found')
         return resp['data']['playlists']
